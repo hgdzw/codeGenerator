@@ -1,0 +1,57 @@
+package ${package.ServiceImpl};
+
+import javax.annotation.Resource;
+import org.springframework.stereotype.Service;
+import java.util.List;
+
+/**
+ * ${table.comment}服务实现
+ *
+ * @author ${author}
+ * @date ${date}
+ */
+@Service
+public class ${table.serviceImplName} implements ${table.serviceName} {
+
+    @Resource
+    private ${table.mapperName} baseMapper;
+
+    @Override
+    public void insert(${entity} model) {
+        baseMapper.insert(model);
+    }
+
+    @Override
+    public void batchInsert(List<${entity}> list) {
+        baseMapper.batchInsert(list);
+    }
+
+    @Override
+    public void deleteById(int id) {
+        ${entity} model = new ${entity}();
+        model.setId(id);
+        baseMapper.deleteByModel(model);
+    }
+
+    @Override
+    public void updateById(${entity} model) {
+        baseMapper.updateByModel(model);
+    }
+
+    @Override
+    public void batchUpdateById(List<${entity}> list) {
+        baseMapper.batchUpdateByModel(list);
+    }
+
+    @Override
+    public ${entity} getById(Integer id) {
+        if (null == id) {
+            return null;
+        }
+
+        ${entity} model = new ${entity}();
+        model.setId(id);
+        return baseMapper.getByModel(model);
+    }
+
+}

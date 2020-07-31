@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="${package.Mapper}.${table.mapperName}">
+
+<sql id="base_column">
+    ${table.fieldNames}
+</sql>
+
+<resultMap id="base_result_map" type="${package.Entity}.${entity}">
+#foreach($field in ${table.fields})
+#if(${field.keyFlag})##生成主键排在第一位
+    <id column="${field.name}" property="${field.propertyName}" />
+#end
+#end
+#foreach($field in ${table.fields})
+#if(!${field.keyFlag})
+    <result column="${field.name}" property="${field.propertyName}" />
+#end
+#end
+</resultMap>
+
+<sql id="sql_base_filter">
+    <trim prefix="where" prefixOverrides="and |or">
+        <choose>
+            <when test="id != null and id != 0">
+                and valid = 1
+                and id = #{id}
+            </when>
+            <otherwise>
+                and valid = 1
+            #foreach($field in ${table.fields})
+            #set ($name = ${field.propertyName})
+            #set ($type = ${field.propertyType})
+            #set ($column = ${field.name})
+            #if(${name} != 'id' && ${type} != 'LocalDate' && ${type} != 'LocalDateTime'
+            && ${type} != 'Date' && ${type} != 'BigDecimal' && ${name} != 'remark' && ${name} != 'valid')
+            #if(${type} == 'String')
+                <if test="${name} != null and ${name} != ''">
+                    and ${column} = #{${name}}
+                </if>
+            #else
+                <if test="${name} != null">
+                    and ${column} = #{${name}}
+                </if>
+            #end
+            #end
+            #end
+            </otherwise>
+        </choose>
+    </trim>
+</sql>
+
+<sql id="sql_base_batch_filter">
+    <trim prefix="where" prefixOverrides="and |or">
+        <choose>
+            <when test="item.id != null and item.id != 0">
+                and valid = 1
+                and id = #{item.id}
+            </when>
+            <otherwise>
+                and valid = 1
+            #foreach($field in ${table.fields})
+            #set ($name = ${field.propertyName})
+            #set ($type = ${field.propertyType})
+            #set ($column = ${field.name})
+            #if(${name} != 'id' && ${type} != 'LocalDate' && ${type} != 'LocalDateTime'
+            && ${type} != 'Date' && ${type} != 'BigDecimal' && ${name} != 'remark' && ${name} != 'valid')
+            #if(${type} == 'String')
+                <if test="item.${name} != null and item.${name} != ''">
+                    and ${column} = #{item.${name}}
+                </if>
+            #else
+                <if test="item.${name} != null">
+                    and ${column} = #{item.${name}}
+                </if>
+            #end
+            #end
+            #end
+            </otherwise>
+        </choose>
+    </trim>
+</sql>
+
+<sql id="sql_base_insert_column">
+    <trim suffixOverrides=",">
+    #foreach($field in ${table.fields})
+    #set ($name = ${field.propertyName})
+    #set ($type = ${field.propertyType})
+    #set ($column = ${field.name})
+    #if(${name} != 'id')
+    #if(${type} == 'String')
+        <if test="${name} != null and ${name} != ''">${column},</if>
+    #else
+    #if(${name} == 'valid')
+        valid,
+    #else
+        <if test="${name} != null">${column},</if>
+    #end
+    #end
+    #end
+    #end
+    </trim>
+</sql>
+
+<sql id="sql_base_insert_value">
+    <trim suffixOverrides=",">
+    #foreach($field in ${table.fields})
+    #set ($name = ${field.propertyName})
+    #set ($type = ${field.propertyType})
+    #set ($column = ${field.name})
+    #if(${name} != 'id')
+    #if(${type} == 'String')
+        <if test="${name} != null and ${name} != ''">#{${name}},</if>
+    #elseif(${name} == 'valid')
+        '1',
+    #else
+        <if test="${name} != null">#{${name}},</if>
+    #end
+    #end
+    #end
+    </trim>
+</sql>
+
+<sql id="sql_base_batch_insert_column">
+    <trim suffixOverrides=",">
+    #foreach($field in ${table.fields})
+    #set ($name = ${field.propertyName})
+    #set ($type = ${field.propertyType})
+    #set ($column = ${field.name})
+    #if(${name} != 'id')
+    #if(${type} == 'String')
+        <if test="item.${name} != null and item.${name} != ''">${column},</if>
+    #else
+    #if(${name} == 'valid')
+        valid,
+    #else
+        <if test="item.${name} != null">${column},</if>
+    #end
+    #end
+    #end
+    #end
+    </trim>
+</sql>
+
+<sql id="sql_base_batch_insert_value">
+    <trim suffixOverrides=",">
+    #foreach($field in ${table.fields})
+    #set ($name = ${field.propertyName})
+    #set ($type = ${field.propertyType})
+    #set ($column = ${field.name})
+    #if(${name} != 'id')
+    #if(${type} == 'String')
+        <if test="item.${name} != null and item.${name} != ''">#{item.${name}},</if>
+    #elseif(${name} == 'valid')
+        '1',
+    #else
+        <if test="item.${name} != null">#{item.${name}},</if>
+    #end
+    #end
+    #end
+    </trim>
+</sql>
+
+<sql id="sql_base_update">
+    <set>
+    #foreach($field in ${table.fields})
+    #set ($name = ${field.propertyName})
+    #set ($type = ${field.propertyType})
+    #set ($column = ${field.name})
+    #if(${name} != 'id' && ${name} != 'createTime' && ${name} != 'mktime' && ${name} != 'valid')
+    #if(${type} == 'String')
+        <if test="${name} != null and ${name} != ''">
+            ${column} = #{${name}},
+        </if>
+    #else
+        <if test="${name} != null">
+            ${column} = #{${name}},
+        </if>
+    #end
+    #end
+    #end
+    </set>
+</sql>
+
+<sql id="sql_base_batch_update">
+    <set>
+    #foreach($field in ${table.fields})
+    #set ($name = ${field.propertyName})
+    #set ($type = ${field.propertyType})
+    #set ($column = ${field.name})
+    #if(${name} != 'id' && ${name} != 'createTime' && ${name} != 'mktime' && ${name} != 'valid')
+    #if(${type} == 'String')
+        <if test="item.${name} != null and item.${name} != ''">
+            ${column} = #{item.${name}},
+        </if>
+    #else
+        <if test="item.${name} != null">
+            ${column} = #{item.${name}},
+        </if>
+    #end
+    #end
+    #end
+    </set>
+</sql>
+
+<insert id="insert" parameterType="${package.Entity}.${entity}" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+    insert into ${table.name} (<include refid="sql_base_insert_column"/>)
+    values (<include refid="sql_base_insert_value"/>)
+</insert>
+
+<insert id="batchInsert" parameterType="java.util.List">
+    <foreach collection="list" item="item" separator=";">
+        insert into ${table.name} (<include refid="sql_base_batch_insert_column"/>)
+        values (<include refid="sql_base_batch_insert_value"/>)
+    </foreach>
+</insert>
+
+<update id="deleteByModel">
+    update ${table.name} set valid = '2' <include refid="sql_base_filter"/>
+</update>
+
+<update id="updateByModel" parameterType="${package.Entity}.${entity}">
+    update ${table.name} <include refid="sql_base_update"/> <include refid="sql_base_filter"/>
+</update>
+
+<update id="batchUpdateByModel" parameterType="java.util.List">
+    <foreach collection="list" item="item" separator=";">
+        update ${table.name} <include refid="sql_base_batch_update"/> <include refid="sql_base_batch_filter"/>
+    </foreach>
+</update>
+
+<select id="getByModel" resultType="${package.Entity}.${entity}" parameterType="${package.Entity}.${entity}">
+    select * from ${table.name} <include refid="sql_base_filter"/> order by id desc limit 1
+</select>
+
+<select id="listByModel" resultType="${package.Entity}.${entity}" parameterType="${package.Entity}.${entity}">
+    select * from ${table.name} <include refid="sql_base_filter"/>
+</select>
+
+</mapper>

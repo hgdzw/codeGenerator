@@ -1,0 +1,55 @@
+package ${package.Service}
+;
+
+/**
+ * ${table.comment}服务
+ *
+ * @author ${author}
+ * @date ${date}
+ */
+public interface ${table.serviceName} {
+
+	/**
+	 * 插入一条
+	 *
+	 * @param model ${entity}
+	 */
+	void insert(${entity} model);
+
+	/**
+	 * 批量插入
+	 *
+	 * @param list List<${entity}>
+	 */
+	void batchInsert(List<${entity}> list);
+
+	/**
+	 * 删除 (根据主键逻辑删除一条)
+	 *
+	 * @param id 主键
+	 */
+	void deleteById(int id);
+
+	/**
+	 * 更新一条 (根据主键更新)
+	 *
+	 * @param model ${entity}
+	 */
+	void updateById(${entity} model);
+
+	/**
+	 * 批量更新 (根据主键更新)
+	 *
+	 * @param list List<${entity}>
+	 */
+	void batchUpdateById(List<${entity}> list);
+
+	/**
+	 * 获取一条 (根据主键获取)
+	 *
+	 * @param id 主键
+	 * @return ${entity}
+	 */
+    ${entity} getById(Integer id);
+
+}

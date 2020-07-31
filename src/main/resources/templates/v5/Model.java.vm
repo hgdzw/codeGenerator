@@ -1,0 +1,42 @@
+package ${package.Entity};
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
+
+/**
+ * ${table.comment}
+ *
+ * @author ${author}
+ * @date ${date}
+ */
+@Data
+public class ${entity} {
+
+#foreach($field in ${table.fields})
+    ## 属性名
+    #set ($name = ${field.propertyName})
+    ## 属性类型
+    #set ($type = ${field.propertyType})
+    ## 字段注释
+    #set ($comment = ${field.comment})
+
+    #if(${name} == 'id')
+    /**
+     * 主键
+     */
+    private Integer id;
+    #elseif(${type} == 'LocalDateTime' || ${type} == 'LocalDate')
+    /**
+     * ${comment}
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date $name;
+    #else
+    /**
+     * ${comment}
+     */
+    private $type $name;
+    #end
+#end
+
+}

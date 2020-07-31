@@ -1,0 +1,68 @@
+package ${package.Mapper};
+
+/**
+ * ${table.comment}Mapper接口
+ *
+ * @author ${author}
+ * @date ${date}
+ */
+public interface ${table.mapperName} {
+
+    /**
+     * 插入一条
+     *
+     * @param model ${entity}
+     */
+    void insert(${entity} model);
+
+    /**
+     * 批量插入
+     *
+     * @param list List<${entity}>
+     */
+    void batchInsert(List<${entity}> list);
+
+    /**
+     * 逻辑删除
+     * if: item.id != null and item.id > 0, 优先使用id
+     *
+     * @param model ${entity}
+     */
+    void deleteByModel(${entity} model);
+
+    /**
+     * 更新一条
+     * if: item.id != null and item.id > 0, 优先使用id
+     *
+     * @param model ${entity}
+     */
+    void updateByModel(${entity} model);
+
+    /**
+     * 批量更新
+     * if: item.id != null and item.id > 0, 优先使用id
+     *
+     * @param list List<${entity}>
+     */
+    void batchUpdateByModel(List<${entity}> list);
+
+    /**
+     * 获取一条
+     * if: id != null and id > 0, 优先使用id
+     * order by id desc limit 1
+     *
+     * @param model ${entity}
+     * @return ${entity}
+     */
+    ${entity} getByModel(${entity} model);
+
+    /**
+     * 获取List
+     * if: id != null and id > 0, 优先使用id
+     *
+     * @param model ${entity}
+     * @return List<${entity}>
+     */
+    List<${entity}> listByModel(${entity} model);
+
+}
